@@ -32,6 +32,9 @@ echo -e "$COL_YELLOW ======================================================$COL_
 # continue or abort
 read -p " Press enter to continue or CTRL-C to abort"
 echo -e "$COL_YELLOW ======================================================$COL_RESET"
+
+
+
 # prompt user to input display name
 echo -e "$COL_GREEN Select a display name for the server $COL_RESET"
 echo -en "$COL_YELLOW Input display name and press enter: $COL_RESET"
@@ -41,7 +44,7 @@ do
 echo -en "$COL_RED Server display name cannot be empty: $COL_RESET"
 read dispname
 done
-sed -i -e "s/My LDAP Server/$dispname/g" /etc/phpldapadmin/config.php
+sudo sed -i -e "s/My LDAP Server/$dispname/g" /etc/phpldapadmin/config.php
 echo -e "$COL_YELLOW ======================================================$COL_RESET"
 # prompt user to input domain name or ip address
 echo -e "$COL_GREEN Set the server$COL_GREEN domain name or IP address$COL_RESET"
@@ -52,7 +55,7 @@ do
 echo -en "$COL_RED Server domain/IP address cannot be empty: $COL_RESET"
 read domip
 done
-sed -i -e "s/127.0.0.1/$domip/g" /etc/phpldapadmin/config.php
+sudo sed -i -e "s/127.0.0.1/$domip/g" /etc/phpldapadmin/config.php
 echo -e "$COL_YELLOW ======================================================$COL_RESET"
 # prompt user to input domain entry in LDAP notation
 echo -e "$COL_GREEN Set the domain name entry in$COL_YELLOW LDAP notation$COL_RESET"
@@ -66,7 +69,7 @@ do
 echo -en "$COL_RED Server domain entry cannot be empty: $COL_RESET"
 read domldap
 done
-sed -i -e "s/dc=example,dc=com/$domldap/g" /etc/phpldapadmin/config.php
+sudo sed -i -e "s/dc=example,dc=com/$domldap/g" /etc/phpldapadmin/config.php
 echo -e "$COL_YELLOW ======================================================$COL_RESET"
 # promt user to select custom user name or admin default
 echo -e "$COL_GREEN Select the$COL_GREEN admin user name$COL_YELLOW [empty for admin]: $COL_RESET"
@@ -80,7 +83,11 @@ then
 else
 cadmin="cn=$admin"
 fi
-sed -i -e "s/cn=admin/$cadmin/g" /etc/phpldapadmin/config.php
+sudo sed -i -e "s/cn=admin/$cadmin/g" /etc/phpldapadmin/config.php
+
+# almost forgot to fix the template bug
+sudo sed -i -e "s/password_hash/password_hash_custom/g" /usr/share/phpldapadmin/lib/TemplateRender.php
+
 # echo user's selections
 echo -e "$COL_GREEN Server display name is now $COL_YELLOW$dispname$COLRESET"
 echo -e "$COL_GREEN Server domain/IP is now$COL_RESET $COL_YELLOW$domip$COL_RESET"
